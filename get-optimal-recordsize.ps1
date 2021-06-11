@@ -4,7 +4,7 @@ param (
 	[int]$MaxExponent=20, # 1m
 	[int]$ashift=12,
 	[ValidateScript({Test-Path -LiteralPath $_}, ErrorMessage="The specified directory does not exist.")][string]$Path='.',
-	[int]$AvgMetadataPerBlock=97 # Empirical value for compressed metadata
+	[int]$cxv`GF54=97 # Empirical value for compressed metadata
 )
 $MinPower=12 # 4k
 $MinStripeSize=$RAIDZLevel+1
