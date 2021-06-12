@@ -4,12 +4,13 @@ param (
 	[int]$MaxExponent=20, # 1m
 	[int]$ashift=12,
 	[ValidateScript({Test-Path -LiteralPath $_}, ErrorMessage="The specified directory does not exist.")][string]$Path='.',
-	[int]$cxv`GF54=97 # Empirical value for compressed metadata
+	[int]$AvgMetadataPerBlock=97 # Empirical value for compressed metadata
 )
+$DebugPreference='Inquire'
 $MinPower=12 # 4k
 $MinStripeSize=$RAIDZLevel+1
 $SectorSize=[Math]::Pow(2,$ashift)
-$FileList=gci -File -Path $Path -Recurse
+$FileList=gci -File -Path $Path -Recurse|?{$_.Length -gt 0}
 $DataSize=($FileList|measure -Sum Length).Sum
 Write-Host "Data size is $DataSize bytes"
 for($i=$MinPower;$i -le $MaxExponent;++$i){

@@ -1,4 +1,4 @@
-# get-optimal-recordsize
+﻿# get-optimal-recordsize
 给定`zpool`的参数和文件列表，找出空间利用率最高的`recordsize`大小。
 
 适用于优化归档数据（不会再更改的数据）或类似文件（会更改，但增减的文件类型、大小比较可控，比如平均5-10MiB大小的JPEG文件）的空间利用率。可用于mirror、stripe和raidz的单`vdev` `zpool`，下文的`vdev`和`zpool`基本可以互换。目前尚不清楚是否适用于多`vdev`的`zpool`。（todo：做测试）
@@ -43,11 +43,12 @@ Record Size Actual Size Overhead %
 1. 所有小于recordsize的文件均存储为可变大小的块，块的大小为扇区大小（ashift）的整数倍；
 2. 所有大于等于recordsize的文件均存储为一个或多个大小等于recordsize的固定大小块
 3. 每个块会附加固定大小的metadata
+4. 大小为0的文件会直接忽略（因为它们好像直接存储在metadata中，[出处](https://github.com/openzfs/zfs/issues/8771#issuecomment-495811601)）
 
 ## 针对RAID-Z
 请参见[这里](https://jro.io/nas/#overhead)
 
-overhead包括：
+所以overhead包括：
 1. 对于可变大小的块，实际存储数据和扇区末尾之间的slack space
 2. 对于固定大小的块，实际存储数据和块末尾之间的slack space
 3. RAID-Z可变大小的stripe所需的额外parity扇区
